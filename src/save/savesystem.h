@@ -2,9 +2,8 @@
 #define SAVE_SYSTEM_H
 
 #include <Arduboy2.h>
-// #include <EEPROM.h>
 
-// Arduboy-safe EEPROM start
+// Arduboy reserves EEPROM bytes 0–31 for system use; start all game saves here.
 constexpr uint16_t EEPROM_SAFE_START = 32;
 constexpr uint16_t EEPROM_TOTAL_SIZE = 1024;
 
@@ -31,6 +30,8 @@ struct SaveHeader {
 
 class SaveSystem {
 public:
+    // Check the stored layout version; wipe all save data and rewrite the
+    // header if it doesn't match SAVE_LAYOUT_VERSION.
     static void init() {
         SaveHeader hdr;
         EEPROM.get(EEPROM_SAFE_START, hdr);
@@ -68,6 +69,7 @@ private:
         return nullptr;
     }
 
+    // Zero every byte in the header + all registered save blocks.
     static void clearAll() {
         uint16_t end = EEPROM_SAFE_START + sizeof(SaveHeader);
         for (uint8_t i = 0; i < SAVE_BLOCK_COUNT; ++i) {

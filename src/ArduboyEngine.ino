@@ -4,15 +4,19 @@
 
 // ENGINE //
 #include "gameengine.h"
+#include "gamestates.h"
 #include "save/savesystem.h"
-#include "controls/controller.h"
-#include "controls/controllablemanager.h"
+#include "managers/controller.h"
+#include "managers/controllablemanager.h"
 
 ////////////
 // EEPROM //
 ////////////
-#include "save/savesystem.h"
 #include "saves.h"
+
+// DEBUG //
+#include "debug/debugoverlay.h"
+#include "debug/debugmenu.h"
 
 // GAME //
 #include "games/arducross.h"
@@ -32,38 +36,32 @@ byte _framerate = DEFAULT_FRAMERATE;
 // Game Engine Data //
 //////////////////////
 FrameCounter _frameCounter = FrameCounter();
-RenderableSystemInfo _renderablesystem = RenderableSystemInfo(&arduboy, &_frameCounter);
 Controller controller;
 ControllerList cl = ControllerList(&controller);
-RenderList renderlist = RenderList();
+RenderPipeline renderPipeline;
+UpdatePipeline pipeline;
+DebugOverlay debugOverlay(&arduboy, &_frameCounter, &pipeline, &renderPipeline, &cl);
+DebugMenu    debugMenu(&arduboy, &cl, &pipeline, &renderPipeline, &debugOverlay);
 Counter counter = Counter(&arduboy, &cl, &_frameCounter);
 
 
 ////////////////////////////
 // Game Specific Managers //
 ////////////////////////////
-enum class ControllableManagerStates {
-    STATE_MIN,
-    GAME_START = STATE_MIN,
-    SETTINGS,
-    GAME_PLAY,
-    GAME_OVER,
-    STATE_MAX = GAME_OVER
-};
-
-StateMachineUpdateable<ControllableManagerStates> sm_main = StateMachineUpdateable<ControllableManagerStates>(&_frameCounter, ControllableManagerStates::STATE_MIN);
+StateMachineUpdateable<ControllableManagerStates> sm_main = StateMachineUpdateable<ControllableManagerStates>(&_frameCounter, ControllableManagerStates::GAME_PLAY);
 StateMachineControllableWrapper<ControllableManagerStates> sm_main_controller = StateMachineControllableWrapper<ControllableManagerStates>(&cl, &sm_main);
 ControllableManager<ControllableManagerStates> gameControllerManager = ControllableManager<ControllableManagerStates>(&cl, &_frameCounter, &sm_main);
-RenderableManager<ControllableManagerStates> gameRenderableManager = RenderableManager<ControllableManagerStates>(&_frameCounter, &renderlist, &sm_main);
+RenderableManager<ControllableManagerStates> gameRenderableManager = RenderableManager<ControllableManagerStates>(&_frameCounter, &renderPipeline, &sm_main);
+UpdateableManager<ControllableManagerStates> gameUpdateableManager = UpdateableManager<ControllableManagerStates>(&_frameCounter, &pipeline, PIPELINE_GAME, &sm_main);
+SceneManager<ControllableManagerStates> sceneManager = SceneManager<ControllableManagerStates>(&_frameCounter, &gameRenderableManager, &gameUpdateableManager, &gameControllerManager, &sm_main);
 
 ///////////////
 // Game Data //
 ///////////////
 PicrossBoard pb = PicrossBoard(&arduboy, 3);
 PicrossBoard apb = PicrossBoard(&arduboy, 3);
-PicrossBoardManager* pbm;// = PicrossBoardManager(&arduboy, &cl);
+PicrossBoardManager* pbm;
 Menu* menu;
-MenuStateSetter<ControllableManagerStates>* state_setter_menu;
 
 void setup() {
 
@@ -77,19 +75,11 @@ void setup() {
   /////////////////
   // System Info //
   /////////////////
-  _renderablesystem.sysInfo.initMemUsage();
+  debugOverlay.sysInfo.initMemUsage();
 
   // Save System //
   SaveSystem::init();
-  
-  //
-  // SavedPicrossBoard temp;
-  // temp.boardsize = 3;
-  // temp.board[0] = 1;
-  // temp.board[1] = 2;
-  // temp.board[2] = 3;
-  // SaveSystem::save(SAVED_BOARD, temp);
-  //
+  counter.loadData();   // restore saved count on startup
 
   /////////////////
   // Picross WIP //
@@ -97,22 +87,6 @@ void setup() {
   pb.setBoardValueAtRow(0b010, 0);
   pb.setBoardValueAtRow(0b101, 1);
   pb.setBoardValueAtRow(0b010, 2);
-  // pb.setBoardValueAtRow(0b010101010101010, 0);
-  // pb.setBoardValueAtRow(0b101010101010101, 1);
-  // pb.setBoardValueAtRow(0b010101010101010, 2);
-  // pb.setBoardValueAtRow(0b101010101010101, 3);
-  // pb.setBoardValueAtRow(0b010101010101010, 4);
-  // pb.setBoardValueAtRow(0b101010101010101, 5);
-  // pb.setBoardValueAtRow(0b010101010101010, 6);
-  // pb.setBoardValueAtRow(0b101010101010101, 7);
-  // pb.setBoardValueAtRow(0b010101010101010, 8);
-  // pb.setBoardValueAtRow(0b101010101010101, 9);
-  // pb.setBoardValueAtRow(0b010101010101010, 10);
-  // pb.setBoardValueAtRow(0b101010101010101, 11);
-  // pb.setBoardValueAtRow(0b010101010101010, 12);
-  // pb.setBoardValueAtRow(0b101010101010101, 13);
-  // pb.setBoardValueAtRow(0b010101010101010, 14);
-  // pb.setBoardValueAtRow(0b101010101010101, 15);
 
   //Create all Possible Game Objects
   pbm = new PicrossBoardManager(&arduboy, &cl);
@@ -124,37 +98,51 @@ void setup() {
   menu = new Menu(&arduboy, &cl, 3, menuItems);
   menu->setPosition(64,0);
 
-  state_setter_menu = new MenuStateSetter<ControllableManagerStates>(&arduboy, &cl, 4, statemenuItems, &sm_main, &_frameCounter);
-  state_setter_menu->setPosition(64, 0);
+  // Debug names (PROGMEM strings, 2 bytes per object in RAM).
+  sceneManager.dbgName                 = PSTR("SceneMgr");
+  counter.Updateable::dbgName          = PSTR("Counter");
+  counter.Renderable::dbgName          = PSTR("Counter");
+  debugOverlay.Renderable::dbgName     = PSTR("Overlay");
+  debugMenu.Renderable::dbgName        = PSTR("DebugMenu");
 
-  //Priority controls
-  sm_main_controller.takeControl();
+  //Register update pipeline entries
+  pipeline.add(PIPELINE_SCENE, &sceneManager);
+
+  // Overlay and debug menu render on top of everything else.
+  renderPipeline.add(PIPELINE_OVERLAY, &debugOverlay);
+  renderPipeline.add(PIPELINE_OVERLAY, &debugMenu);
+
+  // A+B+LEFT held ~2s persistent binding to open the debug menu.
+  cl.addPriorityControl(BUTTON_CHORD_HELD, A_BUTTON | B_BUTTON | LEFT_BUTTON, DebugMenu::OPEN, &debugMenu);
+  debugMenu.stateMachine = &sm_main;
+
+  // Counter is active in all states so it always updates (increments over time)
+  // regardless of which scene is currently displayed.
+  gameUpdateableManager.updateables.add(ControllableManagerStates::GAME_START, &counter);
+  gameUpdateableManager.updateables.add(ControllableManagerStates::GAME_PLAY,  &counter);
+  gameUpdateableManager.updateables.add(ControllableManagerStates::SETTINGS,   &counter);
+  gameUpdateableManager.updateables.add(ControllableManagerStates::GAME_OVER,  &counter);
+
+  // Priority controls are registered once at startup and persist across all
+  // state transitions (CONTROL_PERSISTENT priority).
   counter.takePriorityControl();
 
   //Bind Controllables to State
-  gameControllerManager.controllables.bind(ControllableManagerStates::GAME_START, state_setter_menu);
   gameControllerManager.controllables.bind(ControllableManagerStates::GAME_PLAY, &counter);
   gameControllerManager.controllables.bind(ControllableManagerStates::SETTINGS, menu);
 
   //Bind Renderables to State
-  gameRenderableManager.renderables.add(ControllableManagerStates::GAME_START, state_setter_menu);
-  gameRenderableManager.renderables.add(ControllableManagerStates::GAME_START, &counter);
-
   gameRenderableManager.renderables.add(ControllableManagerStates::GAME_PLAY, &counter);
 
   gameRenderableManager.renderables.add(ControllableManagerStates::SETTINGS, menu);
   gameRenderableManager.renderables.add(ControllableManagerStates::SETTINGS, &counter);
 
-  gameRenderableManager.renderables.add(ControllableManagerStates::GAME_OVER, &_renderablesystem);
   gameRenderableManager.renderables.add(ControllableManagerStates::GAME_OVER, &counter);
-
-  //TODO: temp setting to min?
-  // gameControllerManager.stateMachine.setState(ControllableManagerStates::STATE_MIN);
 }
 
 void loop() {
   if (!(arduboy.nextFrame())) return;
-  _renderablesystem.update();
+  debugOverlay.update();
   arduboy.clear();
 
   //////////////
@@ -173,53 +161,12 @@ void loop() {
   ////////////
   // Update //
   ////////////
-  //TODO: Some kind of update list, Updateables list. Like renderList.
-  //Apply rulles of what needs to be updated before and after
-  //StateSetter, doesn't need to run every frame.
-
-  //On Menu madeSelection, will update State Machine to selected item in Menu.
-  //Marks the start of the state machine transition, isTransitionFinished() = false
-  state_setter_menu->update();
-
-  //on !isTransitionFinished() will clear and swap in renderables for this new state.
-  gameRenderableManager.update();
-
-  //on !isTransitionFinished() will clear non-priority controls and swap in new ones.
-  gameControllerManager.update();
-
-  //
-  counter.update();
-  //
-
-  //State Machine should be updated last, it will complete the state transition. isTransitionFinished() = true
-  sm_main.update();
-
+  pipeline.updateAll();    // PRE → SCENE → GAME
 
   ////////////
   // Render //
   ////////////
-  renderlist.renderAll();
-
-  ///////////
-  // Debug //
-  ///////////
-  String debugPrint = "";
-  //gameControllerManager.stateMachine
-  // debugPrint += gameControllerManager.stateMachine.getState() == ControllableManagerStates::GAME_START ? "1" : "0";
-  // debugPrint += gameControllerManager.stateMachine.getState() == ControllableManagerStates::SETTINGS ? "1" : "0";
-  // debugPrint += gameControllerManager.stateMachine.getState() == ControllableManagerStates::GAME_PLAY ? "1" : "0";
-  // debugPrint += gameControllerManager.stateMachine.getState() == ControllableManagerStates::GAME_OVER ? "1" : "0";
-
-  debugPrint += sm_main.getState() == ControllableManagerStates::GAME_START ? "1" : "0";
-  debugPrint += sm_main.getState() == ControllableManagerStates::SETTINGS ? "1" : "0";
-  debugPrint += sm_main.getState() == ControllableManagerStates::GAME_PLAY ? "1" : "0";
-  debugPrint += sm_main.getState() == ControllableManagerStates::GAME_OVER ? "1" : "0";
-  debugPrint += "-";
-  debugPrint += cl.numControls;
-  debugPrint += "-";
-  debugPrint += renderlist.nNumRenderable;
-  arduboy.setCursor(0, 56);
-  arduboy.print(debugPrint);
+  renderPipeline.renderAll();
 
   arduboy.display();
 }

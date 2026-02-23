@@ -2,6 +2,7 @@
 #define ENUM_PTR_LIST_MAP_H
 
 #include <stdint.h>
+#include "enumptrmap.h"
 
 // ---------- Enum → List of Pointers ----------
 

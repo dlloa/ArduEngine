@@ -25,11 +25,13 @@ void Menu::render(){
 
     char buffer[20];
     strcpy_P(buffer, (char*)pgm_read_word(&(items[itemIndex])));
-    String toPrint = itemIndex == currentSelection ? ( madeSelection ? (">") : ("-")) + String(buffer) : String(buffer);
 
     arduboy->setCursor(xPos, yPos + (itemIndex * vertSpacing));
-    arduboy->print(toPrint);
-    
+    if (itemIndex == currentSelection) {
+        arduboy->print(madeSelection ? '>' : '-');
+    }
+    arduboy->print(buffer);
+
   }
 
 }

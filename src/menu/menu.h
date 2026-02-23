@@ -33,23 +33,23 @@ public:
     bool madeSelection = false;
 };
 
+// Maps a menu selection index to a state enum value via stateFromIndex<T>(),
+// then applies that state to the bound StateMachine.
 template <typename T>
 class MenuStateSetter : public Menu, public Updateable {
 public:
     StateMachine<T>* stateMachine;
 
-    MenuStateSetter(Arduboy2* arduboy, 
-        ControllerList* inCL, 
-        uint8_t inMaxSelection, 
-        const char* const* menuItems, 
-        StateMachine<T>* inStateMachine, 
-        FrameCounter* fc) 
+    MenuStateSetter(Arduboy2* arduboy,
+        ControllerList* inCL,
+        uint8_t inMaxSelection,
+        const char* const* menuItems,
+        StateMachine<T>* inStateMachine,
+        FrameCounter* fc)
         : Menu(arduboy, inCL, inMaxSelection, menuItems), Updateable(fc), stateMachine(inStateMachine){};
 
     void update() override{
         if( madeSelection ){
-            //need a way to set new state based off of selection
-            // stateMachine->setState(stateFromIndex(this->getSelection()));
             uint8_t selection = getSelection();
             stateMachine->setState(stateFromIndex<T>(selection));
             madeSelection = false;

@@ -1,3 +1,6 @@
+#ifndef SPRITES_H
+#define SPRITES_H
+
 const unsigned char PROGMEM smiley[] = {
     0b00111100, // Row 1
     0b01000010, // Row 2
@@ -55,8 +58,8 @@ const unsigned char PROGMEM simpleAnimation4[] = {
     0b10000001  // Column 8
 };
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 384)
-const int simpleAnimation_LEN = 4;
-const unsigned char* simpleAnimation[4] = {
+const uint8_t simpleAnimation_LEN = 4;
+const unsigned char* const simpleAnimation[] PROGMEM = {
   simpleAnimation1,
   simpleAnimation2,
   simpleAnimation3,
@@ -106,8 +109,8 @@ const unsigned char sprite_tile011 [] PROGMEM = {
 };
 
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 384)
-const int sprite_allArray_LEN = 8;
-const unsigned char* sprite_allArray[8] = {
+const uint8_t sprite_allArray_LEN = 8;
+const unsigned char* const sprite_allArray[] PROGMEM = {
 	sprite_tile000,
 	sprite_tile001,
 	sprite_tile002,
@@ -117,3 +120,5 @@ const unsigned char* sprite_allArray[8] = {
 	sprite_tile010,
 	sprite_tile011
 };
+
+#endif

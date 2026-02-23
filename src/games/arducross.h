@@ -2,7 +2,7 @@
 #define ARDUCROSS
 
 #include "../gameengine.h"
-#include "../controls/controller.h"
+#include "../managers/controller.h"
 #include "../utilities/utilities.h"
 
 #define MAXBOARDSIZE 15
