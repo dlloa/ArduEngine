@@ -1,0 +1,370 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"isAnyBut",
+				"isAnyButtonFrameDelayedRepeating"
+			],
+			[
+				"ANY_BUTT",
+				"ANY_BUTTON_FRAME_DELAYED_REPEATING"
+			],
+			[
+				"BUTTON_JUST",
+				"BUTTON_JUST_RELEASED"
+			],
+			[
+				"repeatDe",
+				"repeatDelayButtonTimers"
+			],
+			[
+				"uin",
+				"uint8_t"
+			],
+			[
+				"Picross",
+				"PicrossBoardManager"
+			],
+			[
+				"Picros",
+				"PicrossBoardManager"
+			],
+			[
+				"picros",
+				"PicrossBoardManager"
+			],
+			[
+				"syste",
+				"_system"
+			],
+			[
+				"_frame",
+				"_frameCounter"
+			],
+			[
+				"buttonMem",
+				"buttonMemorySize"
+			],
+			[
+				"full",
+				"full_prompt"
+			],
+			[
+				"visible",
+				"visibleSymbols"
+			],
+			[
+				"handle",
+				"handleNudge"
+			],
+			[
+				"REEL_STO",
+				"REEL_STOPPED"
+			],
+			[
+				"NUDGE_",
+				"NUDGE_UP"
+			],
+			[
+				"static",
+				"static_cast"
+			],
+			[
+				"REELS",
+				"REEL_STARTING"
+			],
+			[
+				"curren",
+				"currentSpinSpeed"
+			],
+			[
+				"handleRee",
+				"handleReelSpinDown"
+			],
+			[
+				"render",
+				"renderDebugOutput"
+			],
+			[
+				"uint",
+				"uint32_t"
+			],
+			[
+				"minSpin",
+				"minSpinDuration"
+			],
+			[
+				"inSpin",
+				"inSpinDownRate"
+			],
+			[
+				"Upda",
+				"Updateable"
+			],
+			[
+				"trail",
+				"trailIndex"
+			],
+			[
+				"update",
+				"updatedelay"
+			],
+			[
+				"scree",
+				"screenPosY"
+			],
+			[
+				"food",
+				"foodX"
+			],
+			[
+				"screenPo",
+				"screenPosX"
+			],
+			[
+				"current",
+				"currentLength"
+			],
+			[
+				"Snake",
+				"SnakeTrail"
+			],
+			[
+				"RIGHT",
+				"RIGHT_BUTTON"
+			],
+			[
+				"DOWN_",
+				"DOWN_BUTTON"
+			],
+			[
+				"Render",
+				"renderlist"
+			],
+			[
+				"LEFT_",
+				"LEFT_BUTTON"
+			],
+			[
+				"DOWN",
+				"DOWN_BUTTON"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine"
+	],
+	"file_history":
+	[
+		"/Users/david/Desktop/solid bed_level_test.stl",
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine/controller.cpp",
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine/ArduboyEngine.ino",
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine/arducross.h",
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine/gameengine.cpp",
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine/controller.h",
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine/gameengine.h",
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine/snake.h",
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine/sprites.h",
+		"/Users/david/Documents/Arduino/ArduboyEngine/ArduboyEngine/watermelon.h",
+		"/Users/david/Desktop/taycan.py",
+		"/Volumes/192.168.1.193/Users/Desky/Documents/StableDiffusion/Automatic1111/image_utils.py",
+		"/Volumes/192.168.1.193/Users/Desky/Documents/StableDiffusion/Automatic1111/request_utils.py",
+		"/Volumes/192.168.1.193/Users/Desky/Documents/StableDiffusion/Automatic1111/prompts_config.py",
+		"/Volumes/192.168.1.193/Users/Desky/Documents/StableDiffusion/Automatic1111/upscale_from_pre_folder.py",
+		"/Volumes/192.168.1.193/Users/Desky/Documents/StableDiffusion/Automatic1111/gen.py",
+		"/Volumes/192.168.1.193/Users/Desky/Documents/StableDiffusion/Automatic1111/generate_low_res.py",
+		"/Users/david/Desktop/gen_old.py",
+		"/Users/david/Documents/Arduino/FortunaReels/reel.h",
+		"/Users/david/Documents/Arduino/FortunaReels/FortunaReels.ino",
+		"/Users/david/Documents/Arduino/FortunaReels/controller.h",
+		"/Volumes/desky/Users/Desky/Documents/StableDiffusion/Automatic1111/error_log.txt",
+		"/Users/david/Desktop/bidrl_scrape/scraper.py",
+		"/Users/david/Downloads/airgradient-homekit-master/library.properties",
+		"/Users/david/Desktop/eappass",
+		"/Users/david/Documents/Unity/Orb/Assets/PlayerMovement.cs",
+		"/Users/david/Desktop/ArborSecurityCodes",
+		"/Volumes/bootfs/ssh",
+		"/Users/david/Downloads/rss.rss",
+		"/Users/david/Desktop/ParallelsDesktopCrack/install.sh",
+		"/Users/david/Documents/Unity/2DTest/Assets/Scripts/CapabilityList.cs"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"currDelayedRepeating",
+			"repeatDelayFrames",
+			"repeatDelayFrames?",
+			"repeatDelayFrames",
+			"BUTTON_JUST_RELEASED",
+			"addControl",
+			"BUTTON_REPEATING",
+			"BUTTON_DELAYED_REPEATING",
+			"BUTTON_REPEATING",
+			"renderlist",
+			"framecounter"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		},
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "arduboyengine.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 236.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
